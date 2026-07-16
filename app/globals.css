@@ -1,0 +1,281 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Typography — Be Vietnam Pro cho cả body lẫn tiêu đề (phân biệt bằng
+     weight, không bằng family). `--font-serif` giữ tên cũ để các call site
+     `font-serif` sẵn có không phải sửa; nó nghĩa là "font tiêu đề", KHÔNG phải
+     serif thật. `font-mono` là DM Mono — CHỈ dùng cho nhãn ASCII (không có
+     glyph tiếng Việt). */
+  --font-sans: var(--font-be-vietnam);
+  --font-serif: var(--font-be-vietnam);
+  --font-mono: var(--font-dm-mono);
+
+  --color-primary: #1c1917;
+  --color-secondary: #57534e;
+  --color-tertiary: #d97706;
+  --color-neutral: #fafaf9;
+  --color-surface: #ffffff;
+  --color-border: #e7e5e4;
+  --color-error: #dc2626;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-3xl: 24px;
+
+  --shadow-soft: 0 8px 30px rgb(0 0 0 / 0.04);
+  --shadow-soft-hover: 0 20px 40px rgb(0 0 0 / 0.08);
+}
+
+body {
+  background: var(
+    --color-neutral
+  ); /* Use neutral as default background per design */
+  color: var(--color-primary); /* Use primary for text */
+}
+
+/* Fix iOS auto-zoom when focusing on inputs */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+button,
+a,
+select {
+  cursor: pointer;
+}
+
+/* Design System Buttons */
+.btn-primary {
+  @apply inline-flex items-center justify-center shrink-0 gap-1.5 px-4 py-4 bg-primary text-surface rounded-xl hover:bg-[#292524] transition-all duration-300 font-medium hover:-translate-y-1 hover:shadow-soft-hover;
+}
+
+.btn-amber {
+  @apply inline-flex items-center justify-center shrink-0 gap-1.5 px-3 py-2.5 bg-tertiary text-primary rounded-full transition-all duration-300 font-medium hover:-translate-y-1 hover:shadow-soft-hover;
+}
+
+.btn-outline,
+.btn {
+  @apply inline-flex items-center justify-center shrink-0 gap-1.5 px-4 py-4 bg-transparent text-secondary rounded-xl border border-border hover:bg-neutral transition-all duration-300 font-medium hover:-translate-y-1 hover:shadow-soft-hover;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center shrink-0 gap-1.5 px-4 py-4 bg-secondary text-surface rounded-xl hover:bg-stone-700 transition-all duration-300 font-medium hover:-translate-y-1 hover:shadow-soft-hover;
+}
+
+.badge-error {
+  @apply inline-flex items-center px-2 py-1 bg-error text-surface rounded-sm text-xs font-medium;
+}
+
+.card-feature {
+  @apply bg-white/70 backdrop-blur-xl rounded-3xl p-[32px] shadow-soft hover:-translate-y-1 hover:shadow-soft-hover transition-all duration-300;
+}
+
+.title {
+  @apply text-2xl sm:text-3xl font-serif font-bold text-primary;
+}
+
+/* ── Portfolio: sidebar cố định ──
+   Chỉ những gì utility Tailwind làm không gọn: sidebar `position: fixed` cộng
+   phần chừa chỗ tương ứng của main. Dưới 768px sidebar trượt ra ngoài và mở
+   bằng nút burger (PortfolioShell). */
+.portfolio-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 260px;
+  z-index: 100;
+  overflow-y: auto;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portfolio-main {
+  margin-left: 260px;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .portfolio-sidebar {
+    transform: translateX(-260px);
+  }
+  .portfolio-sidebar.open {
+    transform: translateX(0);
+  }
+  .portfolio-main {
+    margin-left: 0;
+  }
+}
+
+@keyframes portfolio-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.portfolio-float {
+  animation: portfolio-float 4.5s ease-in-out infinite;
+}
+
+/* Hiện dần khi cuộn tới. KHÔNG đặt animation-fill-mode: ngoài lúc chạy,
+   phần tử giữ style thường (đã hiện) — nên bot/no-JS/tab bị throttle vẫn đọc
+   được nội dung. Đừng đổi thành `both`/`backwards`: nó sẽ ghim trạng thái
+   `from` (opacity 0) và làm cả trang trắng nếu animation không chạy. */
+/* Chấm xanh "đang chạy" cạnh trạng thái app. */
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: portfolio-pulse 2s infinite;
+}
+@keyframes portfolio-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(34 197 94 / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(34 197 94 / 0);
+  }
+}
+
+/* Pill trong Tech & Tools. */
+.skill-pill {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+.skill-pill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+@keyframes portfolio-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.portfolio-reveal {
+  animation: portfolio-reveal 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-float,
+  .portfolio-reveal,
+  .status-dot {
+    animation: none;
+  }
+}
+
+/* Ẩn thanh cuộn nhưng VẪN cuộn/kéo được — dùng cho khung cây gia phả, nơi đã
+   điều hướng bằng kéo chuột + nút zoom nên thanh cuộn chỉ gây nhiễu. */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge cũ */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome / Safari */
+}
+
+/* Nội dung Markdown do người dùng nạp (about.md) — dự án không dùng plugin
+   @tailwindcss/typography nên style thủ công ở đây. */
+.markdown-body {
+  @apply text-[15px] leading-relaxed text-stone-600;
+}
+.markdown-body > * + * {
+  @apply mt-4;
+}
+.markdown-body h1 {
+  @apply font-serif text-2xl font-bold text-stone-900 mt-8 first:mt-0;
+}
+.markdown-body h2 {
+  @apply font-serif text-xl font-bold text-stone-900 mt-8 first:mt-0;
+}
+.markdown-body h3 {
+  @apply text-base font-semibold text-stone-800 mt-6 first:mt-0;
+}
+.markdown-body strong {
+  @apply font-semibold text-stone-800;
+}
+.markdown-body a {
+  @apply text-amber-700 underline underline-offset-2 hover:text-amber-800 break-words;
+}
+.markdown-body ul {
+  @apply list-disc pl-5 space-y-2;
+}
+.markdown-body ol {
+  @apply list-decimal pl-5 space-y-2;
+}
+.markdown-body blockquote {
+  @apply border-l-4 border-amber-200 pl-4 italic text-stone-500;
+}
+.markdown-body code {
+  @apply bg-stone-100 px-1 py-0.5 rounded text-[13px] text-amber-700;
+}
+.markdown-body pre {
+  @apply bg-stone-50 border border-stone-200 rounded-xl p-4 overflow-x-auto;
+}
+.markdown-body pre code {
+  @apply bg-transparent p-0 text-stone-700;
+}
+.markdown-body hr {
+  @apply border-stone-200 my-8;
+}
+.markdown-body img {
+  @apply rounded-xl max-w-full h-auto;
+}
+.markdown-body table {
+  @apply w-full text-left text-sm border-collapse;
+}
+.markdown-body th,
+.markdown-body td {
+  @apply border border-stone-200 px-3 py-2;
+}
+.markdown-body th {
+  @apply bg-stone-50 font-semibold text-stone-800;
+}
+
+/* Typography Overrides */
+.headline-display {
+  @apply font-serif text-[64px] font-bold leading-[1.1] tracking-[-0.02em];
+}
+.headline-lg {
+  @apply font-serif text-[30px] font-bold leading-[1.2];
+}
+.headline-md {
+  @apply font-serif text-[24px] font-semibold leading-[1.3];
+}
+.body-lg {
+  @apply font-sans text-[18px] font-normal leading-[1.6];
+}
+.body-md {
+  @apply font-sans text-[16px] font-normal leading-[1.5];
+}
+.body-sm {
+  @apply font-sans text-[14px] font-normal leading-[1.4];
+}
+.label-lg {
+  @apply font-sans text-[14px] font-semibold leading-[1];
+}
+.label-md {
+  @apply font-sans text-[12px] font-medium leading-[1];
+}

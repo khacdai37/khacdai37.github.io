@@ -1,0 +1,383 @@
+:root {
+  --bg: #f4f5f7;
+  --card: #ffffff;
+  --line: #b8c0cc;
+  --text: #2b3440;
+  --muted: #7a8595;
+  --male: #3b82f6;
+  --female: #ec4899;
+  --accent: #2563eb;
+  --shadow: 0 1px 3px rgba(20, 30, 50, 0.12), 0 1px 2px rgba(20, 30, 50, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---- Top bar ---- */
+.app__bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--card);
+  border-bottom: 1px solid #e3e7ee;
+  box-shadow: var(--shadow);
+  z-index: 20;
+}
+
+.app__title {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.app__search {
+  position: relative;
+  margin-left: auto;
+  width: min(320px, 55vw);
+}
+
+.app__search input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d5dae2;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.app__search input:focus {
+  border-color: var(--accent);
+}
+
+.app__results {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--card);
+  border: 1px solid #e3e7ee;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  z-index: 30;
+}
+
+.app__results button {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.app__results button:hover {
+  background: #eef2fb;
+}
+
+/* ---- Layout ---- */
+.app__main {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* ---- Tree canvas ---- */
+.tree {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  background:
+    radial-gradient(circle, #dfe4ec 1px, transparent 1px) 0 0 / 22px 22px;
+}
+
+.tree:active {
+  cursor: grabbing;
+}
+
+.tree--empty {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+
+.tree__canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.tree__links {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.tree__link {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+/* ---- Couple card ---- */
+.couple {
+  position: absolute;
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.person {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 6px 10px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  font-family: inherit;
+}
+
+/* colored top edge by gender, like the reference */
+.person::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--muted);
+}
+
+.person:has(.person__avatar--male)::before {
+  background: var(--male);
+}
+
+.person:has(.person__avatar--female)::before {
+  background: var(--female);
+}
+
+.person:hover {
+  background: #f1f5fd;
+}
+
+.person--active {
+  background: #e7efff;
+  outline: 2px solid var(--accent);
+}
+
+.person__avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #e7ebf1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.person__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person__name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.person__dates {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---- Zoom controls ---- */
+.tree__controls {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.tree__controls button {
+  width: 38px;
+  height: 38px;
+  font-size: 20px;
+  border: 1px solid #d5dae2;
+  background: var(--card);
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+/* ---- Detail panel ---- */
+.detail {
+  width: 340px;
+  max-width: 90vw;
+  background: var(--card);
+  border-left: 1px solid #e3e7ee;
+  padding: 18px;
+  overflow-y: auto;
+  box-shadow: -2px 0 8px rgba(20, 30, 50, 0.06);
+  z-index: 15;
+}
+
+.detail__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.detail__name {
+  margin: 0;
+  font-size: 20px;
+}
+
+.detail__span {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.detail__close {
+  border: none;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.detail__facts {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 6px 10px;
+  margin: 18px 0;
+  font-size: 14px;
+}
+
+.detail__facts dt {
+  color: var(--muted);
+}
+
+.detail__facts dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.detail__link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+}
+
+.detail__link:hover {
+  text-decoration: underline;
+}
+
+.detail__muted {
+  color: var(--muted);
+}
+
+.detail__focus {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detail__focus:hover {
+  filter: brightness(1.05);
+}
+
+.detail__body {
+  font-size: 14px;
+  line-height: 1.6;
+  border-top: 1px solid #eef1f5;
+  padding-top: 12px;
+}
+
+.detail__body h1,
+.detail__body h2,
+.detail__body h3 {
+  font-size: 15px;
+  margin: 14px 0 6px;
+}
+
+/* ---- Responsive: detail becomes a bottom sheet on narrow screens ---- */
+@media (max-width: 680px) {
+  .detail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 62%;
+    border-left: none;
+    border-top: 1px solid #e3e7ee;
+    border-radius: 16px 16px 0 0;
+  }
+}
