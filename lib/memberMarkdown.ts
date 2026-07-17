@@ -78,12 +78,21 @@ export function suggestId(name: string, birth: string): string {
   return suffix ? `${base}-${suffix}` : base;
 }
 
-/** Ngày giỗ âm lịch từ ngày mất dương đầy đủ (YYYY-MM-DD) → "YYYY-M-D" | null. */
+/** Ngày giỗ âm lịch từ ngày mất dương đầy đủ (dd/mm/yyyy hoặc yyyy-mm-dd) → "YYYY-M-D" | null. */
 export function computeLunarDeath(death: string): string | null {
-  const iso = death.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-  if (!iso) return null;
+  const s = death.trim();
+  const dmy = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  const iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  let y: number, m: number, d: number;
+  if (dmy) {
+    [, d, m, y] = dmy.map(Number) as [number, number, number, number];
+  } else if (iso) {
+    [, y, m, d] = iso.map(Number) as [number, number, number, number];
+  } else {
+    return null;
+  }
   try {
-    const lunar = Solar.fromYmd(+iso[1], +iso[2], +iso[3]).getLunar();
+    const lunar = Solar.fromYmd(y, m, d).getLunar();
     return `${lunar.getYear()}-${Math.abs(lunar.getMonth())}-${lunar.getDay()}`;
   } catch {
     return null;
@@ -110,7 +119,8 @@ export function draftToMarkdown(d: MemberDraft): string {
   lines.push(`gender: ${q(d.gender)}`);
 
   if (d.other_names.trim()) lines.push(`other_names: ${q(d.other_names.trim())}`);
-  // Always quote dates so YAML doesn't coerce "1990-10-09" into a Date.
+  // Always quote dates so YAML doesn't coerce them into a Date. Form nhập theo
+  // dd/mm/yyyy; buildFamilyGraph.toDateParts đọc được cả dd/mm/yyyy lẫn yyyy-mm-dd.
   if (d.birth.trim()) lines.push(`birth: ${q(d.birth.trim())}`);
   if (d.death.trim()) lines.push(`death: ${q(d.death.trim())}`);
 

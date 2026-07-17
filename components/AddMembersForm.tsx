@@ -191,21 +191,21 @@ export default function AddMembersForm() {
             </div>
 
             <div>
-              <label className={labelCls}>Ngày sinh (năm hoặc yyyy-mm-dd)</label>
+              <label className={labelCls}>Ngày sinh (năm hoặc dd/mm/yyyy)</label>
               <input
                 className={inputCls}
                 value={d.birth}
                 onChange={(e) => update(i, { birth: e.target.value })}
-                placeholder="1990 hoặc 1990-10-09"
+                placeholder="1990 hoặc 09/10/1990"
               />
             </div>
             <div>
-              <label className={labelCls}>Ngày mất (năm hoặc yyyy-mm-dd)</label>
+              <label className={labelCls}>Ngày mất (năm hoặc dd/mm/yyyy)</label>
               <input
                 className={inputCls}
                 value={d.death}
                 onChange={(e) => update(i, { death: e.target.value })}
-                placeholder="để trống nếu còn sống"
+                placeholder="Để trống nếu còn sống"
               />
             </div>
 
@@ -247,7 +247,7 @@ export default function AddMembersForm() {
                 list="member-id-options"
                 value={d.spouses}
                 onChange={(e) => update(i, { spouses: e.target.value })}
-                placeholder="id-vo, id-chong"
+                placeholder="Id vợ, Id chồng"
               />
             </div>
             <div>
