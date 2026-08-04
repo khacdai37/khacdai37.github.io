@@ -1,4 +1,13 @@
 /**
+ * DM Mono (`font-mono`) bỏ trống dải U+1EA0–1EF1 — xem ghi chú font trong
+ * CLAUDE.md. Nhãn tiếng Việt đặt vào đó thì ệ/ổ/ư rơi về font hệ thống theo
+ * từng ký tự, ra đúng kiểu chữ cao thấp so le. Nhãn nào vượt ra ngoài ASCII
+ * phải dùng font sans; kiểm tra theo nội dung chứ không theo ngôn ngữ để nhãn
+ * tiếng Anh có dấu (nếu sau này có) cũng được che.
+ */
+const isAsciiOnly = (text: string) => !/[^\x00-\x7F]/.test(text);
+
+/**
  * Khối section của trang landing: canh giữa, `scroll-mt` chừa chỗ cho nav dính
  * (thiếu nó thì anchor nhảy tới sẽ bị nav che mất tiêu đề).
  */
@@ -25,7 +34,15 @@ export default function LandingSection({
     >
       <div className="mx-auto max-w-5xl px-6 py-14 md:py-20">
         {eyebrow && (
-          <p className="mb-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-tertiary">
+          <p
+            className={`mb-2.5 text-[11px] uppercase text-tertiary ${
+              isAsciiOnly(eyebrow)
+                ? "font-mono font-medium tracking-[0.08em]"
+                : // Sans hẹp hơn mono ở cùng cỡ chữ, nên nới tracking và tăng
+                  // weight để nhãn hai thứ tiếng nhìn cùng một sức nặng.
+                  "font-sans font-semibold tracking-[0.13em]"
+            }`}
+          >
             {eyebrow}
           </p>
         )}
