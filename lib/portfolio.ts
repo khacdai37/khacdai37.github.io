@@ -212,10 +212,14 @@ export interface App {
   platform: "iOS" | "Web";
   year: string;
   tech: string[];
+  /** 3 gạch đầu dòng ngắn trên thẻ ở /apps — điểm nổi bật, không lặp `blurb`. */
+  highlights: string[];
   featured: boolean;
   live: boolean;
   /** Link nội bộ (app web) — loại trừ với `appStoreUrl`. */
   href?: string;
+  /** Trang landing riêng của app. Thiếu ⇒ thẻ không hiện "Learn more". */
+  detailHref?: string;
   appStoreId?: string;
   appStoreUrl?: string;
   /** Ảnh trong public/. Rỗng ⇒ card dùng fallback, carousel tự ẩn. */
@@ -223,6 +227,40 @@ export interface App {
 }
 
 export const apps: App[] = [
+  {
+    slug: "inkline",
+    name: "Inkline — English Dictation",
+    category: "Education",
+    blurb:
+      "Hear a sentence, write down exactly what you heard, and get graded word by word — what you missed, what you added, what you misheard.",
+    description:
+      "Dictation is the strictest listening practice there is: you cannot catch the gist and move on, because every word has to be heard and written. Inkline does that one thing. Lessons arrive already split into sentences, playback stops at the end of each one, and every answer is compared against the transcript word by word. It ships with 54 public-domain lessons and imports your own audio — with subtitles, with a transcript, or with nothing at all.",
+    platform: "iOS",
+    year: "2026",
+    tech: ["Swift", "SwiftUI", "SwiftData"],
+    highlights: [
+      "Graded word by word — misspelled, missing and extra words each get their own colour",
+      "Import your own audio: SRT/VTT, a plain transcript, or nothing at all",
+      "54 free public-domain lessons, 3,500+ sentences, A2 to C1 — no account, no ads",
+    ],
+    featured: true,
+    live: true,
+    appStoreId: "6795887349",
+    appStoreUrl:
+      "https://apps.apple.com/us/app/inkline-english-dictation/id6795887349",
+    detailHref: routes.inkline,
+    // Mockup nền trong suốt — xem `lib/deviceShot.ts`.
+    // Ảnh đầu là màn đang chấm — vừa làm cover thẻ ở /apps, vừa làm ảnh hero.
+    images: [
+      "/portfolio/inkline/dictation-graded.png",
+      "/portfolio/inkline/library.png",
+      "/portfolio/inkline/categories.png",
+      "/portfolio/inkline/lessons.png",
+      "/portfolio/inkline/listen-read.png",
+      "/portfolio/inkline/add-lesson.png",
+      "/portfolio/inkline/dictation.png",
+    ],
+  },
   {
     slug: "pomodoro",
     name: "Pomodoro — Focused, Ticking Away",
@@ -234,11 +272,17 @@ export const apps: App[] = [
     platform: "iOS",
     year: "2025",
     tech: ["Swift", "SwiftUI"],
+    highlights: [
+      "Work, short break, long break — the technique with nothing bolted on",
+      "An optional tick keeps the session present without you watching it",
+      "No accounts, no dashboards, nothing to configure before you start",
+    ],
     featured: true,
     live: true,
     appStoreId: "6771709585",
     appStoreUrl:
       "https://apps.apple.com/vn/app/pomodoro-focused-ticking-away/id6771709585",
+    detailHref: routes.pomodoro,
     images: [
       "/portfolio/pomodoro/home-focus-idle.png",
       "/portfolio/pomodoro/home-short-break.png",
@@ -256,6 +300,11 @@ export const apps: App[] = [
     platform: "Web",
     year: "2026",
     tech: ["Next.js", "React", "TypeScript", "d3", "Tailwind"],
+    highlights: [
+      "Members live in Markdown files — load a .zip and it parses in the browser",
+      "Interactive d3 tree that works out generations dynamically",
+      "Vietnamese kinship-term resolver plus family-wide statistics",
+    ],
     featured: true,
     live: true,
     href: routes.familyTree.root,

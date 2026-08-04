@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     routes.home,
     routes.apps,
     routes.youtube,
+    routes.inkline,
     routes.pomodoro,
     routes.familyTree.root,
     routes.familyTree.about,

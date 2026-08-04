@@ -1,4 +1,4 @@
-import { ArrowRight, Globe, Smartphone } from "lucide-react";
+import { ArrowRight, Check, Globe, Smartphone } from "lucide-react";
 import Link from "next/link";
 import AppStoreBadge from "@/components/portfolio/AppStoreBadge";
 import ScreenCarousel from "@/components/portfolio/ScreenCarousel";
@@ -47,12 +47,33 @@ export default function AppShowcase({ app }: { app: App }) {
             ))}
           </div>
 
-          <p className="text-secondary mb-5 leading-relaxed text-sm">
+          <p className="text-secondary mb-4 leading-relaxed text-sm">
             {app.description}
           </p>
 
+          <ul className="mb-5 flex flex-col gap-2">
+            {app.highlights.map((h) => (
+              <li
+                key={h}
+                className="flex gap-2.5 text-sm leading-relaxed text-secondary"
+              >
+                <Check className="size-4 shrink-0 translate-y-0.5 text-tertiary" />
+                {h}
+              </li>
+            ))}
+          </ul>
+
           <div className="flex items-center gap-4 flex-wrap">
             {app.appStoreUrl && <AppStoreBadge url={app.appStoreUrl} />}
+            {app.detailHref && (
+              <Link
+                href={app.detailHref}
+                className="text-sm font-semibold text-tertiary hover:text-amber-800 inline-flex items-center gap-1 transition-colors"
+              >
+                Learn more
+                <ArrowRight className="size-4" />
+              </Link>
+            )}
             {app.href && (
               <Link
                 href={app.href}

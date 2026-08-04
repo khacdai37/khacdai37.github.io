@@ -6,6 +6,7 @@ export const routes = {
   apps: "/apps",
   youtube: "/youtube",
   pomodoro: "/apps/pomodoro",
+  inkline: "/apps/inkline",
   familyTree: {
     root: "/apps/family-tree",
     members: "/apps/family-tree/members",

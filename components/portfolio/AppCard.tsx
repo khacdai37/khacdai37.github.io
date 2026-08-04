@@ -1,27 +1,9 @@
 import { ArrowRight, Globe, Smartphone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import AppStoreBadge from "@/components/portfolio/AppStoreBadge";
 import { asset } from "@/lib/asset";
 import type { App } from "@/lib/portfolio";
-
-/** Badge chính chủ của Apple — ảnh ngoài, `images.unoptimized` nên không qua loader. */
-function AppStoreBadge({ url }: { url: string }) {
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-block transition-opacity hover:opacity-75"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us"
-        alt="Download on the App Store"
-        className="h-10 w-auto block"
-      />
-    </a>
-  );
-}
 
 export default function AppCard({ app }: { app: App }) {
   const Icon = app.platform === "iOS" ? Smartphone : Globe;
@@ -74,6 +56,15 @@ export default function AppCard({ app }: { app: App }) {
 
         <div className="flex items-center gap-4 flex-wrap">
           {app.appStoreUrl && <AppStoreBadge url={app.appStoreUrl} />}
+          {app.detailHref && (
+            <Link
+              href={app.detailHref}
+              className="text-sm font-semibold text-tertiary hover:text-amber-800 inline-flex items-center gap-1 transition-colors"
+            >
+              Learn more
+              <ArrowRight className="size-4" />
+            </Link>
+          )}
           {app.href && (
             <Link
               href={app.href}
