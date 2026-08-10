@@ -1,6 +1,7 @@
 import { ArrowRight, Check, Globe, Smartphone } from "lucide-react";
 import Link from "next/link";
 import AppStoreBadge from "@/components/portfolio/AppStoreBadge";
+import AppVideo from "@/components/portfolio/AppVideo";
 import ScreenCarousel from "@/components/portfolio/ScreenCarousel";
 import type { App } from "@/lib/portfolio";
 
@@ -87,7 +88,9 @@ export default function AppShowcase({ app }: { app: App }) {
         </div>
 
         <div className="p-6 flex flex-col justify-center bg-neutral/60">
-          {hasShots ? (
+          {app.video ? (
+            <AppVideo {...app.video} label={`${app.name} — preview video`} />
+          ) : hasShots ? (
             <ScreenCarousel images={app.images} alt={app.name} />
           ) : (
             // Chưa có screenshot — khối thay thế, không để ô trống.

@@ -224,6 +224,11 @@ export interface App {
   appStoreUrl?: string;
   /** Ảnh trong public/. Rỗng ⇒ card dùng fallback, carousel tự ẩn. */
   images: string[];
+  /**
+   * Video giới thiệu, thay cho carousel ảnh trên thẻ ở `/apps`. Host ngoài nên
+   * không nằm trong `public/` và không qua `asset()`.
+   */
+  video?: { src: string; width: number; height: number };
 }
 
 export const apps: App[] = [
@@ -249,6 +254,11 @@ export const apps: App[] = [
     appStoreUrl:
       "https://apps.apple.com/us/app/inkline-english-dictation/id6795887349",
     detailHref: routes.inkline,
+    video: {
+      src: "https://storage.inkline.io.vn/aso/Inkline-en-v1-081026.mp4",
+      width: 1080,
+      height: 1920,
+    },
     // Mockup nền trong suốt — xem `lib/deviceShot.ts`.
     // Ảnh đầu là màn đang chấm — vừa làm cover thẻ ở /apps, vừa làm ảnh hero.
     images: [
