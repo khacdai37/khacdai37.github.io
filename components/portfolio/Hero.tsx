@@ -1,7 +1,55 @@
 import { ArrowRight, Smartphone } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { profile } from "@/lib/portfolio";
+import AppVideo from "@/components/portfolio/AppVideo";
+import { asset } from "@/lib/asset";
+import { deviceShot } from "@/lib/deviceShot";
+import { latestApp, profile } from "@/lib/portfolio";
 import { routes } from "@/lib/routes";
+
+/**
+ * Media của app mới nhất: video nếu có, không thì screenshot đầu tiên.
+ * Khối trang trí chỉ còn là fallback khi app chưa có ảnh nào.
+ */
+function LatestAppMedia() {
+  const cover = latestApp?.images[0];
+
+  if (latestApp?.video) {
+    return (
+      <AppVideo
+        {...latestApp.video}
+        label={`${latestApp.name} — preview video`}
+        poster={cover ? asset(cover) : undefined}
+        controls={false}
+        // Mobile: media đứng trước tên nên giữ thấp để tên không bị đẩy khỏi
+        // màn hình đầu.
+        className="w-auto max-h-[560px] max-lg:max-h-[340px] rounded-[2rem] border border-border bg-neutral shadow-2xl"
+      />
+    );
+  }
+  if (latestApp && cover) {
+    return (
+      <Image
+        src={asset(cover)}
+        alt={latestApp.name}
+        width={deviceShot.width}
+        height={deviceShot.height}
+        priority
+        // Mockup nền trong suốt: drop-shadow bám theo dáng máy (xem deviceShot).
+        className="portfolio-float w-auto max-h-[560px] max-lg:max-h-[340px] drop-shadow-2xl"
+      />
+    );
+  }
+
+  return (
+    <div className="portfolio-float relative w-full max-w-[280px] aspect-9/19 rounded-[2.5rem] border-8 border-primary bg-gradient-to-br from-amber-100 via-neutral to-rose-100 shadow-2xl flex flex-col items-center justify-center gap-4">
+      <Smartphone className="size-12 text-tertiary" />
+      <p className="font-serif text-xl font-bold text-primary">
+        On the App Store
+      </p>
+    </div>
+  );
+}
 
 export default function Hero() {
   return (
@@ -20,7 +68,7 @@ export default function Hero() {
             {profile.tagline}
           </p>
           <p className="text-secondary leading-relaxed max-w-[460px] mb-8">
-            {profile.summary}
+            {profile.heroIntro}
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href={routes.apps} className="btn-primary !py-3 !px-6">
@@ -33,18 +81,20 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Chưa có ảnh mockup — dùng khối trang trí thay thế. Thay bằng
-            screenshot thật khi có (public/portfolio/…). */}
-        <div className="portfolio-reveal flex justify-center max-lg:order-1">
-          <div className="portfolio-float relative w-full max-w-[280px] aspect-9/19 rounded-[2.5rem] border-8 border-primary bg-gradient-to-br from-amber-100 via-neutral to-rose-100 shadow-2xl flex flex-col items-center justify-center gap-4">
-            <Smartphone className="size-12 text-tertiary" />
-            <p className="font-serif text-xl font-bold text-primary">
-              On the App Store
-            </p>
-            <p className="text-xs text-secondary px-8 text-center">
-              10+ years · 2M+ downloads · 4.8/5
-            </p>
-          </div>
+        <div className="portfolio-reveal flex flex-col items-center gap-4 max-lg:order-1">
+          <LatestAppMedia />
+          {latestApp && (
+            <Link
+              href={latestApp.detailHref ?? latestApp.href ?? routes.apps}
+              className="text-sm text-secondary hover:text-tertiary inline-flex items-center gap-1.5 transition-colors"
+            >
+              <span className="text-[11px] uppercase tracking-[0.12em] text-tertiary">
+                Latest
+              </span>
+              {latestApp.name}
+              <ArrowRight className="size-3.5" />
+            </Link>
+          )}
         </div>
       </div>
     </section>

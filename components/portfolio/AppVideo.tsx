@@ -18,11 +18,26 @@ export default function AppVideo({
   width,
   height,
   label,
+  poster,
+  controls = true,
+  className = "mx-auto max-h-[460px] w-auto rounded-2xl border border-border bg-neutral",
 }: {
   src: string;
   width: number;
   height: number;
   label: string;
+  /**
+   * Ảnh hiện trước khi video chạy — tab bị ẩn hoặc reduced-motion thì video
+   * không tự chạy, thiếu poster sẽ chỉ là một khung trống.
+   */
+  poster?: string;
+  /**
+   * Tắt thanh điều khiển (hero ở trang chủ): video thành phần trang trí, luôn
+   * im tiếng vì không còn nút bật âm.
+   */
+  controls?: boolean;
+  /** Kích thước/khung — hero ở trang chủ cần to hơn thẻ ở `/apps`. */
+  className?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -55,6 +70,7 @@ export default function AppVideo({
     <video
       ref={ref}
       src={src}
+      poster={poster}
       width={width}
       height={height}
       aria-label={label}
@@ -64,11 +80,12 @@ export default function AppVideo({
       preload="metadata"
       // `controls` không phải để trang trí: WCAG 2.2.2 đòi phải có cách dừng
       // thứ tự chạy quá 5 giây. Nó cũng là lối để người xem bật tiếng.
-      controls
+      controls={controls}
       controlsList="nodownload"
-      // `bg-neutral` chứ không phải đen: nền trong video là màu kem, để đen thì
-      // khung nháy một nhịp tối trước khi khung hình đầu tiên hiện ra.
-      className="mx-auto max-h-[460px] w-auto rounded-2xl border border-border bg-neutral"
+      disablePictureInPicture={!controls}
+      // Mặc định dùng `bg-neutral` chứ không phải đen: nền trong video là màu
+      // kem, để đen thì khung nháy một nhịp tối trước khi khung hình đầu hiện ra.
+      className={className}
     />
   );
 }

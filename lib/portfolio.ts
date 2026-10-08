@@ -6,7 +6,11 @@ export const profile = {
   name: "Dai Khac Nguyen",
   role: "iOS Engineer",
   eyebrow: "iOS & Mobile Engineer",
-  tagline: "Ten years of shipping apps people keep on their home screen.",
+  tagline: "Dream big, ship small.",
+  /** Đoạn giới thiệu ở hero — nói về sản phẩm cá nhân, không đi vào kỹ thuật. */
+  heroIntro:
+    "Big ideas, small focused apps. I build iOS apps on my own and share every lesson along the way.",
+  /** Dùng cho meta description (SEO) — giữ từ khoá kỹ thuật, không hiện ở hero. */
   summary:
     "iOS engineer with 10+ years building apps for health, lifestyle, and social media. Swift, Objective-C, UIKit, MVVM — shipped apps with 2M+ downloads and a 4.8/5 App Store rating.",
   about: [
@@ -337,3 +341,11 @@ export const apps: App[] = [
 /** Các app hiển thị trên portfolio — `apps` vẫn chứa cả app ẩn cho `apps.find`. */
 export const listedApps = apps.filter((a) => !a.hidden);
 export const featuredApps = listedApps.filter((a) => a.featured);
+
+/**
+ * App mới nhất (năm lớn nhất) cho hero ở trang chủ. `sort` ổn định nên app
+ * cùng năm giữ thứ tự khai báo trong `apps` — đặt app mới hơn lên trước.
+ */
+export const latestApp: App | undefined = [...listedApps].sort(
+  (a, b) => Number(b.year) - Number(a.year),
+)[0];
