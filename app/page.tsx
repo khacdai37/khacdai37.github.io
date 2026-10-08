@@ -7,7 +7,7 @@ import Hero from "@/components/portfolio/Hero";
 import PortfolioFooter from "@/components/portfolio/PortfolioFooter";
 import PortfolioShell from "@/components/portfolio/PortfolioShell";
 import Reveal from "@/components/portfolio/Reveal";
-import { apps, featuredApps } from "@/lib/portfolio";
+import { featuredApps, listedApps } from "@/lib/portfolio";
 import { routes } from "@/lib/routes";
 
 export default function HomePage() {
@@ -26,7 +26,7 @@ export default function HomePage() {
             href={routes.apps}
             className="text-tertiary hover:text-amber-800 font-medium flex items-center gap-1 transition-colors text-sm shrink-0"
           >
-            See all {apps.length} apps
+            See all {listedApps.length} apps
             <ArrowRight className="size-3.5" />
           </Link>
         </div>

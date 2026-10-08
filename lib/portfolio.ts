@@ -229,6 +229,11 @@ export interface App {
    * không nằm trong `public/` và không qua `asset()`.
    */
   video?: { src: string; width: number; height: number };
+  /**
+   * Ẩn khỏi danh sách app (`/` và `/apps`) nhưng route của app vẫn truy cập
+   * được bằng đường dẫn trực tiếp. Dùng `listedApps` thay vì `apps` để hiển thị.
+   */
+  hidden?: boolean;
 }
 
 export const apps: App[] = [
@@ -317,6 +322,8 @@ export const apps: App[] = [
     ],
     featured: true,
     live: true,
+    // Không quảng bá trên portfolio; /apps/family-tree/ vẫn mở được trực tiếp.
+    hidden: true,
     href: routes.familyTree.root,
     images: [
       "/portfolio/family-tree/tree.jpg",
@@ -327,4 +334,6 @@ export const apps: App[] = [
   },
 ];
 
-export const featuredApps = apps.filter((a) => a.featured);
+/** Các app hiển thị trên portfolio — `apps` vẫn chứa cả app ẩn cho `apps.find`. */
+export const listedApps = apps.filter((a) => !a.hidden);
+export const featuredApps = listedApps.filter((a) => a.featured);
